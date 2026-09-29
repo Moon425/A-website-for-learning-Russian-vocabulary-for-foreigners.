@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Учимся по картинкам</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #1f2937;
+      background:
+        radial-gradient(circle at top left, #dbeafe, transparent 35%),
+        radial-gradient(circle at bottom right, #ede9fe, transparent 35%),
+        #f8fafc;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    h1 {
+      margin: 15px 0;
+      color: #1e3a8a;
+      text-align: center;
+      font-size: 36px;
+    }
+
+    h2 {
+      color: #1e3a8a;
+    }
+
+    .subtitle {
+      margin-bottom: 30px;
+      color: #64748b;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* Главная страница */
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .category {
+      min-height: 145px;
+      padding: 20px 10px;
+      border: 1px solid #dbeafe;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #ffffff, #eff6ff);
+      color: #1f2937;
+      font-size: 17px;
+      box-shadow: 0 6px 20px rgba(30, 64, 175, 0.08);
+      transition:
+        transform 0.65s ease,
+        box-shadow 0.65s ease,
+        background 0.65s ease,
+        border-color 0.65s ease;
+    }
+
+    .category:hover {
+      transform: scale(1.045) translateY(-4px);
+      border-color: #93c5fd;
+      background: linear-gradient(145deg, #ffffff, #eff6ff);
+      box-shadow:
+        0 12px 28px rgba(96, 165, 250, 0.22),
+        0 0 18px rgba(147, 197, 253, 0.3);
+    }
+
+    .category-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 12px;
+      border-radius: 20px;
+      background: #dbeafe;
+      color: #2563eb;
+      font-size: 35px;
+      box-shadow:
+        inset 0 0 0 5px rgba(255, 255, 255, 0.6),
+        0 5px 12px rgba(96, 165, 250, 0.15);
+      transition:
+        transform 0.65s ease,
+        background 0.65s ease,
+        box-shadow 0.65s ease;
+    }
+
+    .category:hover .category-icon {
+      transform: scale(1.08);
+      background: #bfdbfe;
+      box-shadow:
+        inset 0 0 0 5px rgba(255, 255, 255, 0.7),
+        0 0 18px rgba(96, 165, 250, 0.35);
+    }
+
+    .profile-preview,
+    .library-preview {
+      margin-top: 35px;
+      padding: 24px;
+      border: 1px solid #e0e7ff;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.93);
+      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.08);
+    }
+
+    .profile-preview {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: #dbeafe;
+      font-size: 32px;
+    }
+
+    .profile-preview h2,
+    .profile-preview p {
+      margin: 0;
+    }
+
+    .profile-preview p,
+    .library-preview p {
+      color: #64748b;
+    }
+
+    .profile-button {
+      margin-left: auto;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #7c3aed;
+      color: white;
+      font-size: 16px;
+    }
+
+    .profile-button:hover {
+      background: #6d28d9;
+    }
+
+    .library-preview {
+      text-align: center;
+    }
+
+    /* Общие кнопки */
+
+    .button,
+    .back-button,
+    .check-button,
+    .next-button,
+    .home-button,
+    .save-button {
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 24px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+    }
+
+    .button:hover,
+    .check-button:hover,
+    .next-button:hover,
+    .home-button:hover {
+      background: #1d4ed8;
+    }
+
+    .back-button {
+      margin-bottom: 20px;
+      padding: 12px 20px;
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .back-button:hover {
+      background: #cbd5e1;
+    }
+
+    /* Задания */
+
+    .quiz-box {
+      max-width: 900px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 35px rgba(30, 64, 175, 0.1);
+    }
+
+    .quiz-title {
+      margin-top: 0;
+    }
+
+    .progress {
+      margin-bottom: 20px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .instruction {
+      margin-bottom: 20px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .sentence {
+      margin-bottom: 25px;
+      padding: 22px;
+      border-radius: 15px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 27px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .sentence strong {
+      color: #2563eb;
+    }
+
+    .task-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    .image-card {
+      padding: 12px;
+      border: 5px solid transparent;
+      border-radius: 18px;
+      background: #f8fafc;
+      text-align: center;
+      transition:
+        background 0.65s ease,
+        border-color 0.65s ease,
+        box-shadow 0.65s ease;
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #e2e8f0;
+    }
+
+    .image-card.correct {
+      border-color: #86efac;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 4px rgba(134, 239, 172, 0.18);
+    }
+
+    .image-card.wrong {
+      border-color: #fca5a5;
+      background: #fff7f7;
+      animation: shake 0.35s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .image-caption {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 15px;
+    }
+
+    .answer-panel {
+      padding: 20px;
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
+    .answer-panel label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .answer-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      font-size: 19px;
+      transition:
+        background 0.65s ease,
+        border-color 0.65s ease,
+        box-shadow 0.65s ease;
+    }
+
+    .answer-input:focus {
+      border-color: #60a5fa;
+    }
+
+    .answer-input.correct {
+      border-color: #86efac;
+      background: #f0fdf4;
+      box-shadow: 0 0 12px rgba(134, 239, 172, 0.25);
+    }
+
+    .answer-input.wrong {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .check-button,
+    .next-button,
+    .home-button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 14px;
+      background: #2563eb;
+      color: white;
+    }
+
+    .next-button,
+    .home-button {
+      display: none;
+    }
+
+    .feedback {
+      min-height: 90px;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 17px;
+      line-height: 1.45;
+      transition:
+        background 0.65s ease,
+        color 0.65s ease,
+        box-shadow 0.65s ease;
+    }
+
+    .feedback.correct {
+      background: #f0fdf4;
+      color: #3f8058;
+      box-shadow: 0 5px 15px rgba(74, 222, 128, 0.08);
+    }
+
+    .feedback.wrong {
+      background: #fff7f7;
+      color: #a85b5b;
+    }
+
+    .result {
+      display: none;
+      margin: 25px 0;
+      color: #1e3a8a;
+      font-size: 22px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .empty-message {
+      display: none;
+      padding: 30px;
+      border-radius: 15px;
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    /* Личный кабинет */
+
+    .profile-page {
+      max-width: 1000px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 35px rgba(30, 64, 175, 0.1);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .profile-header h1 {
+      margin: 0;
+    }
+
+    .profile-header p {
+      margin: 6px 0 0;
+      color: #64748b;
+    }
+
+    .big-profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 82px;
+      height: 82px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #c4b5fd, #93c5fd);
+      font-size: 44px;
+    }
+
+    .profile-card,
+    .mistakes-card {
+      margin-top: 22px;
+      padding: 23px;
+      border: 1px solid #e0e7ff;
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
+    .profile-card h2,
+    .mistakes-card h2 {
+      margin-top: 0;
+    }
+
+    .profile-name-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .profile-name-row input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      font-size: 17px;
+    }
+
+    .save-button {
+      padding: 12px 20px;
+      background: #4f46e5;
+      color: white;
+    }
+
+    .save-button:hover {
+      background: #4338ca;
+    }
+
+    .name-message {
+      min-height: 20px;
+      margin-bottom: 0;
+    }
+
+    .profile-statistics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 22px;
+    }
+
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 20px 10px;
+      border-radius: 17px;
+      background: white;
+      color: #64748b;
+      text-align: center;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-card strong {
+      color: #1e3a8a;
+      font-size: 30px;
+    }
+
+    .stat-icon {
+      font-size: 26px;
+    }
+
+    .mistake-item {
+      margin-bottom: 12px;
+      padding: 15px;
+      border-left: 4px solid #fca5a5;
+      border-radius: 10px;
+      background: #fff7f7;
+      line-height: 1.5;
+    }
+
+    .no-mistakes {
+      color: #16a34a;
+      font-size: 17px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 29px;
+      }
+
+      .task-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sentence {
+        font-size: 22px;
+      }
+
+      .profile-preview {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .profile-button {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .profile-statistics {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-name-row {
+        flex-direction: column;
+      }
+
+      .save-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <!-- Главная страница -->
+
+    <section id="homeScreen" class="screen active">
+      <h1>Учимся по картинкам</h1>
+
+      <p class="subtitle">
+        Выберите раздел для начала задания
+      </p>
+
+      <div id="categories" class="categories"></div>
+
+      <div class="profile-preview">
+        <div class="profile-icon">👤</div>
+
+        <div>
+          <h2>Личный кабинет</h2>
+          <p id="homeUserName">Пользователь</p>
+        </div>
+
+        <button id="openProfileButton" class="profile-button">
+          Открыть
+        </button>
+      </div>
+    </section>
+
+
+    <!-- Экран заданий -->
+
+    <section id="quizScreen" class="screen">
+
+      <button id="backButton" class="back-button">
+        ← Вернуться к разделам
+      </button>
+
+      <div class="quiz-box">
+
+        <h1 id="quizTitle" class="quiz-title"></h1>
+
+        <div id="progress" class="progress"></div>
+
+        <div id="emptyMessage" class="empty-message">
+          В этом разделе пока нет заданий.
+        </div>
+
+        <div id="quizContent">
+
+          <div class="instruction">
+            Посмотрите на картинку и впишите пропущенное слово.
+          </div>
+
+          <div id="sentence" class="sentence"></div>
+
+          <div class="task-layout">
+
+            <div id="imageCard" class="image-card">
+              <img id="taskImage" src="" alt="Картинка задания">
+
+              <div class="image-caption">
+                Рассмотрите изображение
+              </div>
+            </div>
+
+            <div class="answer-panel">
+
+              <label for="answerInput">
+                Ваш ответ:
+              </label>
+
+              <input
+                id="answerInput"
+                class="answer-input"
+                type="text"
+                placeholder="Введите слово"
+                autocomplete="off"
+              >
+
+              <button id="checkButton" class="check-button">
+                Проверить
+              </button>
+
+              <div id="feedback" class="feedback">
+                Введите слово и нажмите «Проверить».
+              </div>
+
+              <button id="nextButton" class="next-button">
+                Следующее задание
+              </button>
+
+            </div>
+
+          </div>
+
+          <div id="result" class="result"></div>
+
+          <button id="homeButton" class="home-button">
+            Вернуться к разделам
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Личный кабинет -->
+
+    <section id="profileScreen" class="screen">
+
+      <div class="profile-page">
+
+        <button id="profileBackButton" class="back-button">
+          ← Вернуться на главную
+        </button>
+
+        <div class="profile-header">
+          <div class="big-profile-icon">👤</div>
+
+          <div>
+            <h1>Личный кабинет</h1>
+            <p id="profileGreeting">Здравствуйте!</p>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <h2>Ваше имя</h2>
+
+          <div class="profile-name-row">
+            <input
+              id="profileNameInput"
+              type="text"
+              placeholder="Введите имя"
+              maxlength="30"
+            >
+
+            <button id="saveNameButton" class="save-button">
+              Сохранить
+            </button>
+          </div>
+
+          <p id="nameMessage" class="name-message"></p>
+        </div>
+
+        <div class="profile-statistics">
+
+          <div class="stat-card">
+            <span class="stat-icon">✅</span>
+            <strong id="correctAnswersCount">0</strong>
+            <span>правильных ответов</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon">❌</span>
+            <strong id="mistakesCount">0</strong>
+            <span>ошибок</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon">🏆</span>
+            <strong id="totalScore">0</strong>
+            <span>общий результат</span>
+          </div>
+
+        </div>
+
+        <div class="mistakes-card">
+          <h2>Где были ошибки</h2>
+
+          <div id="mistakesList">
+            <p class="no-mistakes">
+              Пока ошибок нет. Отличная работа!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <script>
+    /*
+      Словарь.
+
+      В каждом разделе 10 слов.
+      При открытии раздела сайт случайно перемешивает слова.
+      Сейчас показываются все 10, потому что в каждом разделе их ровно 10.
+
+      Для картинки используется путь:
+      images/ключ-раздела-слово.jpg
+
+      Например:
+      images/family-mama.jpg
+      images/food-apple.jpg
+    */
+
+    const dictionary = {
+
+      family: {
+        title: "Семья",
+        emoji: "👨‍👩‍👧‍👦",
+        words: [
+          ["мама", "Моя ___ готовит завтрак.", "Это женщина-родитель."],
+          ["папа", "Мой ___ читает газету.", "Это мужчина-родитель."],
+          ["брат", "Мой ___ помогает мне.", "Это мальчик или мужчина из семьи."],
+          ["сестра", "Моя ___ играет с куклой.", "Это девочка или женщина из семьи."],
+          ["бабушка", "Моя ___ любит рассказывать истории.", "Это мама твоего папы или мамы."],
+          ["дедушка", "Мой ___ живёт в деревне.", "Это папа твоего папы или мамы."],
+          ["ребёнок", "Маленький ___ спит в кроватке.", "Так называют маленького человека."],
+          ["семья", "У меня дружная ___.", "Это люди, которые являются родственниками."],
+          ["сын", "У родителей есть маленький ___.", "Это мальчик по отношению к родителям."],
+          ["дочь", "У родителей есть маленькая ___.", "Это девочка по отношению к родителям."]
+        ]
+      },
+
+      food: {
+        title: "Еда",
+        emoji: "🍎",
+        words: [
+          ["яблоко", "На столе лежит красное ___.", "Это круглый фрукт."],
+          ["банан", "На завтрак я съел один ___.", "Это длинный жёлтый фрукт."],
+          ["чай", "Я пью горячий ___.", "Этот напиток часто пьют горячим."],
+          ["каша", "На завтрак я ем ___.", "Это блюдо готовят из крупы."],
+          ["молоко", "В стакане холодное ___.", "Белый напиток, который дают коровы."],
+          ["хлеб", "На столе лежит кусок ___.", "Этот продукт пекут из муки."],
+          ["мороженое", "Я люблю сладкое ___.", "Это холодный сладкий десерт."],
+          ["суп", "На столе стоит горячий ___.", "Это жидкое горячее блюдо."],
+          ["помидор", "Красный овощ — это ___.", "Этот овощ часто добавляют в салат."],
+          ["апельсин", "На столе лежит круглый ___.", "Это оранжевый цитрусовый фрукт."]
+        ]
+      },
+
+      sport: {
+        title: "Спорт",
+        emoji: "⚽",
+        words: [
+          ["футбол", "Мальчик играет в ___.", "В этой игре есть мяч и ворота."],
+          ["теннис", "Девочка играет в ___.", "В этой игре используют ракетку."],
+          ["бассейн", "Спортсмен плавает в ___.", "Это место с водой для плавания."],
+          ["велосипед", "Мальчик катается на ___.", "У этого транспорта есть два колеса."],
+          ["штанга", "Спортсмен поднимает ___.", "Это тяжёлый спортивный предмет."],
+          ["гимнастика", "Девочка занимается ___.", "Это спорт с упражнениями и растяжкой."],
+          ["баскетбол", "Команда играет в ___.", "В этой игре мяч бросают в корзину."],
+          ["стадион", "Мальчик бежит на ___.", "Большое место для спортивных соревнований."],
+          ["шлем", "Спортсмен надевает ___.", "Он защищает голову."],
+          ["вода", "После тренировки спортсмен пьёт ___.", "Прозрачная жидкость для питья."]
+        ]
+      },
+
+      city: {
+        title: "Город",
+        emoji: "🏙️",
+        words: [
+          ["дом", "В городе стоит высокий ___.", "В нём живут люди."],
+          ["парк", "Мы гуляем в городском ___.", "Это зелёное место для прогулок."],
+          ["дорога", "Машины едут по ___.", "По ней передвигаются машины."],
+          ["улица", "Люди переходят ___.", "По ней ездят машины и ходят люди."],
+          ["магазин", "В городе есть большой ___.", "Там люди покупают товары."],
+          ["площадка", "Дети играют на ___.", "Это место для игр детей."],
+          ["фонтан", "На площади стоит красивый ___.", "Из него течёт вода."],
+          ["остановка", "Мы ждём автобус на ___.", "Там пассажиры ждут транспорт."],
+          ["театр", "В центре города находится ___.", "Там показывают спектакли."],
+          ["мост", "Через реку построен ___.", "По нему можно перейти через реку."]
+        ]
+      },
+
+      professions: {
+        title: "Профессии",
+        emoji: "👩‍⚕️",
+        words: [
+          ["врач", "___ лечит людей.", "Этот специалист работает в больнице."],
+          ["учитель", "___ учит детей.", "Этот специалист работает в школе."],
+          ["повар", "___ готовит еду.", "Он работает на кухне."],
+          ["пожарный", "___ тушит пожар.", "Он спасает людей и тушит огонь."],
+          ["водитель", "___ водит автобус.", "Он управляет транспортом."],
+          ["писатель", "___ пишет книги.", "Он создаёт литературные произведения."],
+          ["художник", "___ рисует картины.", "Он работает с красками."],
+          ["продавец", "___ работает в магазине.", "Он помогает покупать товары."],
+          ["строитель", "___ строит дома.", "Он возводит здания."],
+          ["фотограф", "___ фотографирует людей.", "Он работает с фотоаппаратом."]
+        ]
+      },
+
+      seasons: {
+        title: "Время года",
+        emoji: "🌦️",
+        words: [
+          ["весна", "После зимы приходит ___.", "Тает снег и распускаются цветы."],
+          ["лето", "Самое тёплое время года — ___.", "В это время обычно жарко."],
+          ["осень", "После лета наступает ___.", "Листья желтеют и опадают."],
+          ["зима", "Самое холодное время года — ___.", "В это время часто идёт снег."],
+          ["цветы", "Весной распускаются ___.", "Они растут на клумбах и в садах."],
+          ["море", "Летом дети купаются в ___.", "Это большой водоём с солёной водой."],
+          ["листья", "Осенью с деревьев падают ___.", "Они меняют цвет и опадают."],
+          ["снеговик", "Зимой дети лепят ___.", "Его делают из снега."],
+          ["дождь", "Весной часто идёт тёплый ___.", "Вода падает с неба."],
+          ["одежда", "Зимой мы надеваем тёплую ___.", "Она защищает от холода."]
+        ]
+      },
+
+      time: {
+        title: "Время",
+        emoji: "⏰",
+        words: [
+          ["утро", "После ночи наступает ___.", "В это время люди просыпаются."],
+          ["день", "После утра наступает ___.", "В это время светит солнце."],
+          ["вечер", "После дня наступает ___.", "В это время солнце садится."],
+          ["ночь", "После вечера наступает ___.", "В это время люди спят."],
+          ["минут", "В одном часе шестьдесят ___.", "Это единицы измерения времени."],
+          ["секунд", "В одной минуте шестьдесят ___.", "Это очень короткие единицы времени."],
+          ["часа", "Сейчас ровно два ___.", "Так мы говорим о времени на часах."],
+          ["пять", "Через ___ минут начнётся урок.", "Небольшое число."],
+          ["понедельник", "Сегодня ___.", "Это день недели."],
+          ["часов", "Урок начинается в девять ___.", "Так измеряют время на часах."]
+        ]
+      },
+
+      body: {
+        title: "Части тела",
+        emoji: "🖐️",
+        words: [
+          ["голова", "На плечах находится ___.", "На ней находятся глаза, нос и рот."],
+          ["глаза", "Мы смотрим ___.", "С их помощью мы видим."],
+          ["уши", "Мы слышим ___.", "С их помощью мы слышим звуки."],
+          ["нос", "Мы нюхаем ___.", "Он находится в центре лица."],
+          ["рот", "Мы улыбаемся ___.", "Им мы говорим и едим."],
+          ["ноги", "Мы ходим с помощью ___.", "Они находятся в нижней части тела."],
+          ["руки", "Мы берём предметы ___.", "На них есть пальцы."],
+          ["пальцы", "На руках есть пять ___.", "Они находятся на руках."],
+          ["грудь", "Сердце находится в ___.", "Эта часть тела находится между шеей и животом."],
+          ["локоть", "Мы сгибаем руку в ___.", "Это сустав на руке."]
+        ]
+      },
+
+      countries: {
+        title: "Страны",
+        emoji: "🌍",
+        words: [
+          ["страна", "Россия — большая ___.", "Территория с границами и населением."],
+          ["Европа", "Франция находится в ___.", "Это часть света."],
+          ["Африка", "Египет находится в ___.", "Это континент."],
+          ["Япония", "___ — это островная страна.", "Это островная страна в Азии."],
+          ["Москва", "Столицей России является ___.", "Это главный город России."],
+          ["Париж", "Столицей Франции является ___.", "Это известный европейский город."],
+          ["Рим", "В Италии находится город ___.", "Это столица Италии."],
+          ["флаг", "___ — символ страны.", "У каждой страны есть свой символ."],
+          ["языках", "Люди говорят на разных ___.", "На них люди общаются."],
+          ["язык", "У каждой страны есть государственный ___.", "На нём официально говорят жители."]
+        ]
+      },
+
+      home: {
+        title: "Дом",
+        emoji: "🏠",
+        words: [
+          ["дом", "Мы живём в ___.", "Это место, где живут люди."],
+          ["спальня", "Мы спим в ___.", "Это комната для сна."],
+          ["кухня", "Мы готовим еду на ___.", "Это комната, где готовят еду."],
+          ["ванная", "Мы принимаем ванну в ___.", "Комната с ванной или душем."],
+          ["гостиная", "Мы смотрим телевизор в ___.", "Комната для отдыха."],
+          ["полка", "Книги стоят на ___.", "На ней хранят книги и предметы."],
+          ["стул", "Мы сидим на ___.", "На нём можно сидеть."],
+          ["кровать", "Мы спим на ___.", "На ней спят."],
+          ["холодильник", "Еду хранят в ___.", "Он сохраняет продукты холодными."],
+          ["дверь", "Мы открываем и закрываем ___.", "Через неё входят в комнату."]
+        ]
+      },
+
+      museum: {
+        title: "Музей",
+        emoji: "🏛️",
+        words: [
+          ["картина", "В музее висит ___.", "Это произведение искусства."],
+          ["предмет", "В витрине стоит древний ___.", "Это вещь из прошлого."],
+          ["история", "Экскурсовод рассказывает об ___.", "Это события прошлого."],
+          ["скульптура", "В музее можно увидеть ___.", "Объёмное произведение искусства."],
+          ["вещи", "Музей хранит старинные ___.", "Предметы, которыми пользовались раньше."],
+          ["экспонаты", "Посетители рассматривают ___.", "Предметы, представленные в музее."],
+          ["портрет", "На стене висит старинный ___.", "Картина с изображением человека."],
+          ["разговаривать", "В музее нельзя громко ___.", "Посетители должны соблюдать тишину."],
+          ["музей", "Мы купили билет в ___.", "Место, где хранятся исторические предметы."],
+          ["экскурсовод", "В музее работает ___.", "Он рассказывает посетителям об экспонатах."]
+        ]
+      },
+
+      study: {
+        title: "Учёба",
+        emoji: "📚",
+        words: [
+          ["книга", "На столе лежит ___.", "Её читают."],
+          ["тетрадь", "Я пишу в ___.", "В ней ученики делают записи."],
+          ["доска", "Учитель пишет на ___.", "Она находится перед классом."],
+          ["карандаш", "Для письма нужен ___.", "Им можно писать и рисовать."],
+          ["текст", "Я читаю интересный ___.", "Это несколько связанных предложений."],
+          ["задачи", "На уроке мы решаем ___.", "Их нужно решить."],
+          ["уроки", "В школе ученики ходят на ___.", "На них изучают разные предметы."],
+          ["перемена", "После урока начинается ___.", "В это время ученики отдыхают."],
+          ["язык", "Мы изучаем русский ___.", "На нём мы говорим и пишем."],
+          ["слушать", "В школе нужно внимательно ___.", "Так ученики понимают объяснение учителя."]
+        ]
+      },
+
+      pronouns: {
+        title: "Местоимения",
+        emoji: "🗣️",
+        words: [
+          ["он", "___ читает книгу.", "Местоимение вместо слова «мальчик»."],
+          ["она", "___ готовит обед.", "Местоимение вместо слова «девочка»."],
+          ["они", "___ играют во дворе.", "Местоимение для нескольких людей."],
+          ["я", "___ читаю рассказ.", "Местоимение человека, который говорит."],
+          ["мы", "___ идём в школу.", "Местоимение для говорящего и других людей."],
+          ["ты", "___ читаешь книгу.", "Местоимение человека, к которому обращаются."],
+          ["оно", "___ лежит на столе.", "Местоимение для предмета среднего рода."],
+          ["мой", "Это ___ карандаш.", "Так говорят о предмете мальчика или мужчины."],
+          ["моя", "Это ___ книга.", "Так говорят о книге девочки или женщины."],
+          ["наши", "Это ___ игрушки.", "Так говорят о вещах, которые принадлежат нам."]
+        ]
+      },
+
+      transport: {
+        title: "Транспорт",
+        emoji: "🚌",
+        words: [
+          ["автобус", "Я еду в школу на ___.", "Это городской общественный транспорт."],
+          ["машина", "Папа едет на работу на ___.", "У неё есть четыре колеса."],
+          ["рельсы", "Поезд едет по ___.", "По ним движется поезд."],
+          ["небо", "Самолёт летит в ___.", "Там находятся облака."],
+          ["море", "Корабль плывёт по ___.", "Большой водоём с солёной водой."],
+          ["дом", "Такси остановилось у ___.", "В нём живут люди."],
+          ["землёй", "Метро находится под ___.", "Метро часто движется под городом."],
+          ["колеса", "Велосипед имеет два ___.", "Они помогают ему двигаться."],
+          ["шлем", "Мотоциклист надевает ___.", "Он защищает голову."],
+          ["вокзале", "Пассажир ждёт поезд на ___.", "Там останавливаются поезда."]
+        ]
+      },
+
+      nature: {
+        title: "Природа",
+        emoji: "🌳",
+        words: [
+          ["деревья", "В лесу растут высокие ___.", "У них есть ствол и ветви."],
+          ["цветы", "На поляне растут красивые ___.", "Они бывают разных цветов."],
+          ["солнце", "В небе светит ___.", "Оно даёт свет и тепло."],
+          ["луна", "Ночью на небе видна ___.", "Она светит ночью."],
+          ["лужи", "После дождя появляются ___.", "В них собирается вода."],
+          ["вода", "В реке течёт чистая ___.", "Её пьют люди и животные."],
+          ["животные", "В лесу живут дикие ___.", "Они живут в природе."],
+          ["птица", "На ветке сидит маленькая ___.", "Она умеет летать."],
+          ["облака", "На небе появились белые ___.", "Они плывут по небу."],
+          ["радуга", "После дождя появилась ___.", "Она разноцветная и бывает после дождя."]
+        ]
+      }
+    };
+
+
+    /*
+      Вспомогательные функции
+    */
+
+    function shuffle(array) {
+      const result = [...array];
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        [result[i], result[randomIndex]] =
+          [result[randomIndex], result[i]];
+      }
+
+      return result;
+    }
+
+    function normalizeAnswer(value) {
+      return value
+        .trim()
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/\s+/g, " ");
+    }
+
+    function makeImageName(categoryKey, word) {
+      const safeWord = word
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[^а-яa-z0-9]+/gi, "-")
+        .replace(/^-|-$/g, "");
+
+      return `images/${categoryKey}-${safeWord}.jpg`;
+    }
+
+    function createTask(categoryKey, item) {
+      return {
+        answer: item[0],
+        sentence: item[1],
+        hint: item[2],
+        image: makeImageName(categoryKey, item[0])
+      };
+    }
+
+
+    /*
+      Создание карточек разделов
+    */
+
+    const categoriesElement =
+      document.getElementById("categories");
+
+    Object.entries(dictionary).forEach(([key, category]) => {
+      const button = document.createElement("button");
+
+      button.className = "category";
+
+      button.innerHTML = `
+        <span class="category-icon">
+          ${category.emoji}
+        </span>
+        ${category.title}
+      `;
+
+      button.addEventListener("click", () => {
+        openCategory(key);
+      });
+
+      categoriesElement.appendChild(button);
+    });
+
+
+    /*
+      Элементы страницы
+    */
+
+    const homeScreen =
+      document.getElementById("homeScreen");
+
+    const quizScreen =
+      document.getElementById("quizScreen");
+
+    const profileScreen =
+      document.getElementById("profileScreen");
+
+    const quizTitle =
+      document.getElementById("quizTitle");
+
+    const progress =
+      document.getElementById("progress");
+
+    const sentence =
+      document.getElementById("sentence");
+
+    const taskImage =
+      document.getElementById("taskImage");
+
+    const imageCard =
+      document.getElementById("imageCard");
+
+    const answerInput =
+      document.getElementById("answerInput");
+
+    const checkButton =
+      document.getElementById("checkButton");
+
+    const feedback =
+      document.getElementById("feedback");
+
+    const nextButton =
+      document.getElementById("nextButton");
+
+    const backButton =
+      document.getElementById("backButton");
+
+    const homeButton =
+      document.getElementById("homeButton");
+
+    const result =
+      document.getElementById("result");
+
+    const quizContent =
+      document.getElementById("quizContent");
+
+    const emptyMessage =
+      document.getElementById("emptyMessage");
+
+    const openProfileButton =
+      document.getElementById("openProfileButton");
+
+    const profileBackButton =
+      document.getElementById("profileBackButton");
+
+    const profileNameInput =
+      document.getElementById("profileNameInput");
+
+    const saveNameButton =
+      document.getElementById("saveNameButton");
+
+    const nameMessage =
+      document.getElementById("nameMessage");
+
+    const homeUserName =
+      document.getElementById("homeUserName");
+
+    const profileGreeting =
+      document.getElementById("profileGreeting");
+
+    const correctAnswersCount =
+      document.getElementById("correctAnswersCount");
+
+    const mistakesCount =
+      document.getElementById("mistakesCount");
+
+    const totalScore =
+      document.getElementById("totalScore");
+
+    const mistakesList =
+      document.getElementById("mistakesList");
+
+
+    /*
+      Переменные теста
+    */
+
+    let currentCategory = "";
+    let currentTasks = [];
+    let currentTask = 0;
+    let sectionCorrectAnswers = 0;
+    let sectionMistakes = 0;
+    let answerIsCorrect = false;
+
+
+    /*
+      Данные пользователя
+    */
+
+    let userName =
+      localStorage.getItem("pictureQuizUserName") ||
+      "Пользователь";
+
+    let userStatistics = JSON.parse(
+      localStorage.getItem("pictureQuizStatistics") || "null"
+    ) || {
+      correctAnswers: 0,
+      mistakes: []
+    };
+
+
+    /*
+      Личный кабинет
+    */
+
+    function saveStatistics() {
+      localStorage.setItem(
+        "pictureQuizStatistics",
+        JSON.stringify(userStatistics)
+      );
+    }
+
+    function updateUserNameOnPage() {
+      homeUserName.textContent = userName;
+      profileNameInput.value = userName;
+      profileGreeting.textContent =
+        `Здравствуйте, ${userName}!`;
+    }
+
+    function updateProfileStatistics() {
+      correctAnswersCount.textContent =
+        userStatistics.correctAnswers;
+
+      mistakesCount.textContent =
+        userStatistics.mistakes.length;
+
+      totalScore.textContent =
+        userStatistics.correctAnswers -
+        userStatistics.mistakes.length;
+
+      renderMistakes();
+    }
+
+    function renderMistakes() {
+      if (userStatistics.mistakes.length === 0) {
+        mistakesList.innerHTML = `
+          <p class="no-mistakes">
+            Пока ошибок нет. Отличная работа!
+          </p>
+        `;
+
+        return;
+      }
+
+      mistakesList.innerHTML = "";
+
+      userStatistics.mistakes.forEach(mistake => {
+        const item = document.createElement("div");
+
+        item.className = "mistake-item";
+
+        item.innerHTML = `
+          <strong>Раздел: ${mistake.category}</strong><br>
+          Предложение: ${mistake.sentence}<br>
+          Ваш ответ: <strong>${mistake.userAnswer}</strong><br>
+          Правильный ответ:
+          <strong>${mistake.correctAnswer}</strong><br>
+          Списано: <strong>−1 балл</strong>
+        `;
+
+        mistakesList.appendChild(item);
+      });
+    }
+
+    function openProfile() {
+      homeScreen.classList.remove("active");
+      quizScreen.classList.remove("active");
+      profileScreen.classList.add("active");
+
+      updateUserNameOnPage();
+      updateProfileStatistics();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    saveNameButton.addEventListener("click", () => {
+      const newName =
+        profileNameInput.value.trim();
+
+      if (newName === "") {
+        nameMessage.textContent =
+          "Введите имя.";
+
+        nameMessage.style.color =
+          "#dc2626";
+
+        return;
+      }
+
+      userName = newName;
+
+      localStorage.setItem(
+        "pictureQuizUserName",
+        userName
+      );
+
+      updateUserNameOnPage();
+
+      nameMessage.textContent =
+        "Имя успешно сохранено.";
+
+      nameMessage.style.color =
+        "#16a34a";
+    });
+
+    profileNameInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        saveNameButton.click();
+      }
+    });
+
+
+    /*
+      Открытие раздела
+
+      В каждом разделе максимум 10 заданий.
+      Если слов меньше 10, будут показаны все слова.
+    */
+
+    function openCategory(categoryKey) {
+      const category =
+        dictionary[categoryKey];
+
+      currentCategory = categoryKey;
+      currentTask = 0;
+      sectionCorrectAnswers = 0;
+      sectionMistakes = 0;
+
+      const allTasks =
+        category.words.map(item =>
+          createTask(categoryKey, item)
+        );
+
+      currentTasks =
+        shuffle(allTasks).slice(0, 10);
+
+      homeScreen.classList.remove("active");
+      profileScreen.classList.remove("active");
+      quizScreen.classList.add("active");
+
+      quizTitle.textContent =
+        category.title;
+
+      if (currentTasks.length === 0) {
+        quizContent.style.display = "none";
+        emptyMessage.style.display = "block";
+        return;
+      }
+
+      quizContent.style.display = "block";
+      emptyMessage.style.display = "none";
+
+      showTask();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+
+    /*
+      Показ задания
+    */
+
+    function showTask() {
+      const task =
+        currentTasks[currentTask];
+
+      progress.textContent =
+        `Задание ${currentTask + 1} из ${currentTasks.length}`;
+
+      sentence.innerHTML =
+        task.sentence.replace(
+          "___",
+          "<strong>___</strong>"
+        );
+
+      taskImage.onerror = function() {
+        this.onerror = null;
+
+        this.src =
+          "data:image/svg+xml;charset=UTF-8," +
+          encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="500"
+                 height="300">
+              <rect width="500"
+                    height="300"
+                    fill="#dbeafe"/>
+              <text x="250"
+                    y="140"
+                    text-anchor="middle"
+                    font-size="22"
+                    fill="#2563eb">
+                Добавьте картинку
+              </text>
+              <text x="250"
+                    y="175"
+                    text-anchor="middle"
+                    font-size="15"
+                    fill="#64748b">
+                ${task.answer}
+              </text>
+            </svg>
+          `);
+      };
+
+      taskImage.src = task.image;
+      taskImage.alt = "Картинка задания";
+
+      imageCard.className = "image-card";
+
+      answerInput.value = "";
+      answerInput.disabled = false;
+      answerInput.className = "answer-input";
+
+      checkButton.disabled = false;
+
+      feedback.textContent =
+        "Введите слово и нажмите «Проверить».";
+
+      feedback.className = "feedback";
+
+      nextButton.style.display = "none";
+      homeButton.style.display = "none";
+      result.style.display = "none";
+
+      sentence.style.display = "block";
+      imageCard.style.display = "block";
+      answerInput.style.display = "block";
+      checkButton.style.display = "block";
+      feedback.style.display = "block";
+
+      answerIsCorrect = false;
+
+      setTimeout(() => {
+        answerInput.focus();
+      }, 100);
+    }
+
+
+    /*
+      Проверка ответа
+    */
+
+    function checkAnswer() {
+      if (answerIsCorrect) {
+        return;
+      }
+
+      const task =
+        currentTasks[currentTask];
+
+      const userAnswer =
+        normalizeAnswer(answerInput.value);
+
+      if (userAnswer === "") {
+        imageCard.className =
+          "image-card wrong";
+
+        answerInput.className =
+          "answer-input wrong";
+
+        feedback.textContent =
+          "Введите слово в поле ответа.";
+
+        feedback.className =
+          "feedback wrong";
+
+        return;
+      }
+
+      const correctAnswer =
+        normalizeAnswer(task.answer);
+
+      if (userAnswer === correctAnswer) {
+        imageCard.className =
+          "image-card correct";
+
+        answerInput.className =
+          "answer-input correct";
+
+        feedback.innerHTML =
+          `Правильно! Ответ: <strong>${task.answer}</strong>.`;
+
+        feedback.className =
+          "feedback correct";
+
+        sectionCorrectAnswers++;
+        answerIsCorrect = true;
+
+        userStatistics.correctAnswers++;
+        saveStatistics();
+        updateProfileStatistics();
+
+        answerInput.disabled = true;
+        checkButton.disabled = true;
+
+        nextButton.style.display =
+          "block";
+      } else {
+        imageCard.className =
+          "image-card wrong";
+
+        answerInput.className =
+          "answer-input wrong";
+
+        sectionMistakes++;
+
+        userStatistics.mistakes.push({
+          category: dictionary[currentCategory].title,
+          sentence: task.sentence,
+          userAnswer: answerInput.value,
+          correctAnswer: task.answer
+        });
+
+        saveStatistics();
+        updateProfileStatistics();
+
+        feedback.innerHTML =
+          `Ответ неверный. Списано <strong>−1 балл</strong>.<br><br>
+           <strong>Подсказка:</strong> ${task.hint}`;
+
+        feedback.className =
+          "feedback wrong";
+      }
+    }
+
+
+    /*
+      Следующее задание
+    */
+
+    nextButton.addEventListener("click", () => {
+      currentTask++;
+
+      if (currentTask < currentTasks.length) {
+        showTask();
+        return;
+      }
+
+      sentence.style.display = "none";
+      imageCard.style.display = "none";
+      answerInput.style.display = "none";
+      checkButton.style.display = "none";
+      feedback.style.display = "none";
+      nextButton.style.display = "none";
+
+      progress.textContent = "";
+
+      const finalScore =
+        sectionCorrectAnswers -
+        sectionMistakes;
+
+      result.innerHTML = `
+        Раздел завершён!<br>
+        Правильных ответов:
+        <strong>${sectionCorrectAnswers}</strong><br>
+        Ошибок:
+        <strong>${sectionMistakes}</strong><br>
+        Итоговый результат:
+        <strong>${finalScore}</strong>
+      `;
+
+      result.style.display =
+        "block";
+
+      homeButton.style.display =
+        "block";
+    });
+
+
+    /*
+      Переходы между экранами
+    */
+
+    function goHome() {
+      homeScreen.classList.add("active");
+      quizScreen.classList.remove("active");
+      profileScreen.classList.remove("active");
+
+      updateUserNameOnPage();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    backButton.addEventListener(
+      "click",
+      goHome
+    );
+
+    homeButton.addEventListener(
+      "click",
+      goHome
+    );
+
+    profileBackButton.addEventListener(
+      "click",
+      goHome
+    );
+
+    openProfileButton.addEventListener(
+      "click",
+      openProfile
+    );
+
+    checkButton.addEventListener(
+      "click",
+      checkAnswer
+    );
+
+    answerInput.addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Enter") {
+          checkAnswer();
+        }
+      }
+    );
+
+
+    /*
+      Начальная загрузка
+    */
+
+    updateUserNameOnPage();
+    updateProfileStatistics();
+  </script>
+
+</body>
+</html>
